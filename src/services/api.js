@@ -4,5 +4,8 @@
 // const BASE_URL = process.env.VUE_APP_API_BASE_URL
 module.exports = {
   LOGIN: `${BASE_URL}/passport/signin`,
-  ROUTES: `${BASE_URL}/routes`
+  ROUTES: `${BASE_URL}/routes`,
+  ARTICLE_LIST : `${BASE_URL}/article/list`,
+  ARTICLE_REMOVE : `${BASE_URL}/article/remove`,
+  ARTICLE_UPDATE : `${BASE_URL}/article/update`,
 }
