@@ -49,12 +49,12 @@ const options = {
             {
               path: 'type-list',
               name: '分类列表',
-              component: () => import('@/pages/demo'),
+              component: async () => (await import("@/pages/dblog/type")).TypeList,
             },
             {
               path: 'tags-list',
               name: '标签列表',
-              component: () => import('@/pages/demo'),
+              component: async () =>(await import("@/pages/dblog/tags")).TagsList,
             }
           ]
         },{
@@ -63,37 +63,37 @@ const options = {
           meta: {
             icon: 'global'
           },
-          component: PageView,
+          component: BlankView,
           children:[
             {
-              path: 'friend-link',
+              path: 'link',
               name: '友情链接',
-              component: () => import('@/pages/demo'),
+              component: async () => (await import("@/pages/dblog/link")).LinkList,
             },
             {
-              path: 'comment-list',
+              path: 'comment',
               name: '评论管理',
-              component: () => import('@/pages/demo'),
+              component: async () => (await import("@/pages/dblog/comment")).CommentList,
             },
             {
-              path: 'temp-list',
+              path: 'template',
               name: '模板管理',
-              component: () => import('@/pages/demo'),
+              component: async () => (await import("@/pages/dblog/template")).TemplateList,
             },
             {
-              path: 'updatelog-list',
+              path: 'update_recorde',
               name: '更新日志',
-              component: () => import('@/pages/demo'),
+              component: async () => (await import("@/pages/dblog/update_recorde")).UpdateRecordList,
             },
             {
-              path: 'notice-list',
+              path: 'notice',
               name: '公告管理',
-              component: () => import('@/pages/demo'),
+              component: async () => (await import("@/pages/dblog/notice")).NoticeList,
             },
             {
-              path: 'file-list',
+              path: 'file',
               name: '文件管理',
-              component: () => import('@/pages/demo'),
+              component: async () => (await import("@/pages/dblog/file")).FileList,
             },
             {
               path: 'login-list',
