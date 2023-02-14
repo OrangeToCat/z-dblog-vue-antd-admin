@@ -48,8 +48,6 @@ function keyReName(data, oldName, newName, isDeleteOldName = false) {
 
 function keyReNameForObject(data, oldName, newName, isDeleteOldName = false) {
 
-    
-
     if (classOf(data) !== "Object") {
         throw new Error("第一个参数data应该是一个Object！");
     }

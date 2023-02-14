@@ -9,84 +9,22 @@
             <a-space>
                 <a-button type="primary" @click="showAddModal">新增</a-button>
                 <a-button type="danger" @click="handleDelete">删除</a-button>
-                <a-button disabled>批量发布</a-button>
-                <a-button disabled icon="cloud" title="推送到百度">百度</a-button>
             </a-space>
         </div>
 
         <div class="content-condition">
             <div id="components-form-demo-advanced-search">
-                <a-form class="ant-advanced-search-form" :form="form" @submit="handleSearch">
-                    <a-row :gutter="24">
-                        <a-col :span="10" :style="{ display: 1 < count ? 'block' : 'none' }">
-                            <a-form-item label="名称和描述" :label-col="{ span: 5 }" :wrapper-col="{ span: 19 }">
-                                <a-input v-decorator="[
-                                    `keywords`,
-                                ]" />
-                            </a-form-item>
-                        </a-col>
-                        <a-col :span="10" :style="{ display: 1 < count ? 'block' : 'none' }">
-                            <a-form-item label="名称" :label-col="{ span: 5 }" :wrapper-col="{ span: 19 }">
-                                <a-input v-decorator="[
-                                    `title`,
-                                ]" />
-                            </a-form-item>
-                        </a-col>
-
-                        <a-col :span="4" :style="{ textAlign: 'left' }">
-                            <a-button type="primary" html-type="submit" @click="handleSearch">
-                                搜索
-                            </a-button>
-                            <a-button :style="{ marginLeft: '8px' }" @click="handleReset">
-                                重置
-                            </a-button>
-                            <a v-if="false" :style="{ marginLeft: '8px', fontSize: '12px' }" @click="toggle">
-                                <a-icon :type="expand ? 'up' : 'down'" />
-                            </a>
-                        </a-col>
-                    </a-row>
-                </a-form>
+                
                 <div class="search-result-list">
                     <a-table :columns="columns" :row-key="record => record.id" bordered
                         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
                         :data-source="data" :pagination="pagination" :loading="loading" @change="handleTableChange">
-                        <span slot="itemTitle" slot-scope="itemTitle,record">
-                            <a-tag :color="record.status ? 'cyan' : 'pink'">
-                                {{ record.status ? '已发布' : '草稿' }}
-                            </a-tag>
-                            <a-tooltip>
-                                <template slot="title">
-                                    {{ itemTitle }}
-                                </template>
-                                {{ itemTitle }}
-                            </a-tooltip>
-                        </span>
-                        <span slot="coverImage" slot-scope="coverImage">
-                            <!-- <a-avatar  shape="square" :src="'http://172.16.2.230:8085/static/assets/' + coverImage"/>  -->
-                            {{ coverImage }}
-                        </span>
-                        <span slot="comment" slot-scope="comment,record">
-                            <a-switch :defaultChecked="comment" @change="() => onChange('comment', record.id)" />
-                        </span>
-                        <span slot="recommended" slot-scope="recommended,record">
-                            <a-switch :defaultChecked="recommended" @change="() => onChange('recommend', record.id)" />
-                        </span>
-                        <span slot="top" slot-scope="top,record">
-                            <a-switch :defaultChecked="top" @change="() => onChange('top', record.id)" />
-                        </span>
-                        <span slot="isprivate" slot-scope="isprivate">
-                            <a-tag :color="isprivate ? 'volcano' : 'green'">
-                                {{ isprivate?"私密": "公开" }}
+                        <span slot="status" slot-scope="status">
+                            <a-tag :color="status ? 'cyan' : 'pink'">
+                                {{ status == 'RELEASE'? '已发布' : '未发布' }}
                             </a-tag>
                         </span>
                         <a-space slot="operation" slot-scope="operation,record">
-                            <a-tooltip>
-                                <template slot="title">
-                                    推送到百度站长平台
-                                </template>
-                                <a-button disabled type="link" icon="rocket" />
-                            </a-tooltip>
-
                             <a-tooltip>
                                 <template slot="title">
                                     编辑
@@ -119,7 +57,7 @@
 <script>
 import { mapState } from 'vuex'
 
-import { articleList, deleteArticles, updateTopOrRecommendedById } from "@/services/article";
+import { list, remove } from "@/services/notice";
 
 const columns = [
     {
@@ -131,54 +69,17 @@ const columns = [
         scopedSlots: { customRender: 'itemTitle' },
     },
     {
-        title: "封面图",
-        dataIndex: "coverImage",
+        title: "内容",
+        dataIndex: "content",
         width: "80px",
         align: "center",
-        scopedSlots: { customRender: 'coverImage' },
+        scopedSlots: { customRender: 'content' },
     }, {
-        title: "评论",
-        dataIndex: "comment",
+        title: "状态",
+        dataIndex: "status",
         width: "80px",
-        scopedSlots: { customRender: 'comment' },
+        scopedSlots: { customRender: 'status' },
         align: "center",
-    }, {
-        title: "推荐",
-        dataIndex: "recommended",
-        width: "80px",
-        scopedSlots: { customRender: 'recommended' },
-        align: "center",
-    }, {
-        title: "置顶",
-        dataIndex: "top",
-        width: "80px",
-        scopedSlots: { customRender: 'top' },
-        align: "center",
-    }, {
-        title: "浏览",
-        dataIndex: "lookCount",
-        align: "center",
-        width: "80px",
-    }, {
-        title: "评论",
-        dataIndex: "commentCount",
-        width: "80px",
-        align: "center",
-    }, {
-        title: "喜欢",
-        dataIndex: "loveCount",
-        width: "80px",
-        align: "center",
-    }, {
-        title: "私密",
-        dataIndex: "private",
-        width: "80px",
-        align: "center",
-        scopedSlots: { customRender: 'isprivate' },
-    }, {
-        title: "发布时间",
-        dataIndex: "createTime",
-        width: "80px",
     }, {
         title: "操作",
         dataIndex: "id",
@@ -232,7 +133,7 @@ export default {
                     f();
                 },
                 onOk(f) {
-                    deleteArticles(ids).then(({ data }) => {
+                    remove(ids).then(({ data }) => {
                         var status = data.status;
                         var msg = data.message;
                         that.$message[status == 200 ? "info" : "warn"](msg);
@@ -296,7 +197,7 @@ export default {
                 params.pageNumber | this.pagination.current
             ];
 
-            articleList(...questParams).then(({ data }) => {
+            list(...questParams).then(({ data }) => {
                 const pagination = { ...this.pagination };
                 pagination.total = data.total;
                 this.loading = false;
@@ -311,18 +212,6 @@ export default {
             console.log(e);
             // 添加一个新的模块
             this.visible = false;
-        },
-        onChange(type, id) {
-            var that = this;
-
-            // 这里有可以优化的地方
-            // 如果更改成功，则仅仅是提示，不做表格的刷新
-            // 如果更改失败，则提示，另外还要把开关复原
-            updateTopOrRecommendedById(type, id).then(({ data }) => {
-                var { status, message } = data;
-                that.$message[status == 200 ? "info" : "warn"](message);
-                that.fetch();
-            });
         }
     },
 }
