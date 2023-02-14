@@ -2835,10 +2835,10 @@
   "resolved" "https://registry.npm.taobao.org/cli-width/download/cli-width-2.2.1.tgz"
   "version" "2.2.1"
 
-"clipboard@^2.0.0", "clipboard@^2.0.6":
-  "integrity" "sha1-UpISlu7A/fd+rRdJQhshyWhkc3Y= sha512-g5zbiixBRk/wyKakSwCKd7vQXDjFnAMGHoEyBogG/bw9kTD9GvdAvaoRR1ALcEzt3pVKxZR0pViekPMIS0QyGg=="
-  "resolved" "https://registry.npm.taobao.org/clipboard/download/clipboard-2.0.6.tgz"
-  "version" "2.0.6"
+"clipboard@^2.0.0", "clipboard@^2.0.11":
+  "integrity" "sha512-C+0bbOqkezLIsmWSvlsXS0Q0bmkugu7jcfMIACB+RDEntIzQIkdr148we28AfSloQLRdZlYL/QYyrq05j/3Faw=="
+  "resolved" "https://registry.npmjs.org/clipboard/-/clipboard-2.0.11.tgz"
+  "version" "2.0.11"
   dependencies:
     "good-listener" "^1.2.2"
     "select" "^1.1.2"

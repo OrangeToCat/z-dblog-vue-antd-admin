@@ -1,69 +1,23 @@
 <template>
     <div class="default-datagrid" :style="`min-height: ${pageMinHeight}px;`">
 
-        <div class="content-notice">
-            <a-alert message="提示" description="使用过程中如果有不能解决的问题，请去提issue哈，在群里消息太多，有时候会看不到消息记录" type="info" />
-        </div>
-
         <div class="content-tool-bar">
             <a-space>
                 <a-button type="primary" @click="showAddModal">新增</a-button>
                 <a-button type="danger" @click="handleDelete">删除</a-button>
-                <a-button disabled>批量发布</a-button>
-                <a-button disabled icon="cloud" title="推送到百度">百度</a-button>
             </a-space>
         </div>
 
         <div class="content-condition">
             <div id="components-form-demo-advanced-search">
-                <a-form class="ant-advanced-search-form" :form="form" @submit="handleSearch">
-                    <a-row :gutter="24">
-                        <a-col :span="10" :style="{ display: 1 < count ? 'block' : 'none' }">
-                            <a-form-item label="名称和描述" :label-col="{ span: 5 }" :wrapper-col="{ span: 19 }">
-                                <a-input v-decorator="[
-                                    `keywords`,
-                                ]" />
-                            </a-form-item>
-                        </a-col>
-                        <a-col :span="10" :style="{ display: 1 < count ? 'block' : 'none' }">
-                            <a-form-item label="名称" :label-col="{ span: 5 }" :wrapper-col="{ span: 19 }">
-                                <a-input v-decorator="[
-                                    `title`,
-                                ]" />
-                            </a-form-item>
-                        </a-col>
-
-                        <a-col :span="4" :style="{ textAlign: 'left' }">
-                            <a-button type="primary" html-type="submit" @click="handleSearch">
-                                搜索
-                            </a-button>
-                            <a-button :style="{ marginLeft: '8px' }" @click="handleReset">
-                                重置
-                            </a-button>
-                            <a v-if="false" :style="{ marginLeft: '8px', fontSize: '12px' }" @click="toggle">
-                                <a-icon :type="expand ? 'up' : 'down'" />
-                            </a>
-                        </a-col>
-                    </a-row>
-                </a-form>
+               
                 <div class="search-result-list">
                     <a-table :columns="columns" :row-key="record => record.id" bordered
                         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
                         :data-source="data" :pagination="pagination" :loading="loading" @change="handleTableChange">
-                        <span slot="itemTitle" slot-scope="itemTitle,record">
-                            <a-tag :color="record.status ? 'cyan' : 'pink'">
-                                {{ record.status ? '已发布' : '草稿' }}
-                            </a-tag>
-                            <a-tooltip>
-                                <template slot="title">
-                                    {{ itemTitle }}
-                                </template>
-                                {{ itemTitle }}
-                            </a-tooltip>
-                        </span>
-                        <span slot="coverImage" slot-scope="coverImage">
-                            <!-- <a-avatar  shape="square" :src="'http://172.16.2.230:8085/static/assets/' + coverImage"/>  -->
-                            {{ coverImage }}
+
+                        <span slot="fullFilePath" slot-scope="fullFilePath">
+                            <a-avatar shape="square" :src="fullFilePath" />
                         </span>
                         <span slot="comment" slot-scope="comment,record">
                             <a-switch :defaultChecked="comment" @change="() => onChange('comment', record.id)" />
@@ -82,16 +36,11 @@
                         <a-space slot="operation" slot-scope="operation,record">
                             <a-tooltip>
                                 <template slot="title">
-                                    推送到百度站长平台
+                                    复制链接
                                 </template>
-                                <a-button disabled type="link" icon="rocket" />
-                            </a-tooltip>
-
-                            <a-tooltip>
-                                <template slot="title">
-                                    编辑
-                                </template>
-                                <a-button disabled type="link" icon="edit" />
+                                <a-button data-clipboard-action="copy" class="copy-file-url-btn"
+                                    :data-clipboard-text="record.fullFilePath"  type="link" icon="copy"
+                                    @click="handleCopy" />
                             </a-tooltip>
 
                             <a-tooltip>
@@ -119,66 +68,29 @@
 <script>
 import { mapState } from 'vuex'
 
-import { articleList, deleteArticles, updateTopOrRecommendedById } from "@/services/article";
+import { list, remove } from "@/services/file";
+import ClipboardJS from 'clipboard';
 
 const columns = [
     {
-        title: '标题',
-        dataIndex: 'title',
+        title: '文件名',
+        dataIndex: 'originalFileName',
         sorter: true,
         width: "160px",
         ellipsis: true,
-        scopedSlots: { customRender: 'itemTitle' },
     },
     {
-        title: "封面图",
-        dataIndex: "coverImage",
+        title: "文件类型",
+        dataIndex: "suffix",
         width: "80px",
         align: "center",
-        scopedSlots: { customRender: 'coverImage' },
+        scopedSlots: { customRender: 'suffix' },
     }, {
-        title: "评论",
-        dataIndex: "comment",
+        title: "缩略图",
+        dataIndex: "fullFilePath",
         width: "80px",
-        scopedSlots: { customRender: 'comment' },
+        scopedSlots: { customRender: 'fullFilePath' },
         align: "center",
-    }, {
-        title: "推荐",
-        dataIndex: "recommended",
-        width: "80px",
-        scopedSlots: { customRender: 'recommended' },
-        align: "center",
-    }, {
-        title: "置顶",
-        dataIndex: "top",
-        width: "80px",
-        scopedSlots: { customRender: 'top' },
-        align: "center",
-    }, {
-        title: "浏览",
-        dataIndex: "lookCount",
-        align: "center",
-        width: "80px",
-    }, {
-        title: "评论",
-        dataIndex: "commentCount",
-        width: "80px",
-        align: "center",
-    }, {
-        title: "喜欢",
-        dataIndex: "loveCount",
-        width: "80px",
-        align: "center",
-    }, {
-        title: "私密",
-        dataIndex: "private",
-        width: "80px",
-        align: "center",
-        scopedSlots: { customRender: 'isprivate' },
-    }, {
-        title: "发布时间",
-        dataIndex: "createTime",
-        width: "80px",
     }, {
         title: "操作",
         dataIndex: "id",
@@ -232,7 +144,7 @@ export default {
                     f();
                 },
                 onOk(f) {
-                    deleteArticles(ids).then(({ data }) => {
+                    remove(ids).then(({ data }) => {
                         var status = data.status;
                         var msg = data.message;
                         that.$message[status == 200 ? "info" : "warn"](msg);
@@ -296,11 +208,11 @@ export default {
                 params.pageNumber | this.pagination.current
             ];
 
-            articleList(...questParams).then(({ data }) => {
+            list(...questParams).then(({ data }) => {
                 const pagination = { ...this.pagination };
                 pagination.total = data.total;
                 this.loading = false;
-                this.data = data.rows;
+                this.data = data.list;
                 this.pagination = pagination;
             });
         },
@@ -312,16 +224,16 @@ export default {
             // 添加一个新的模块
             this.visible = false;
         },
-        onChange(type, id) {
-            var that = this;
+        handleCopy() {
+            var _this = this;
+            var clipboard = new ClipboardJS(".copy-file-url-btn");
 
-            // 这里有可以优化的地方
-            // 如果更改成功，则仅仅是提示，不做表格的刷新
-            // 如果更改失败，则提示，另外还要把开关复原
-            updateTopOrRecommendedById(type, id).then(({ data }) => {
-                var { status, message } = data;
-                that.$message[status == 200 ? "info" : "warn"](message);
-                that.fetch();
+            clipboard.on('success', function () {
+                _this.$message.info("复制成功")
+            });
+
+            clipboard.on('error', function () {
+                _this.$message.warn("复制失败")
             });
         }
     },
