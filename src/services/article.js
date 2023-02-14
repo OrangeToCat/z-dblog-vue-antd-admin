@@ -1,6 +1,15 @@
-import { ARTICLE_LIST, ARTICLE_REMOVE , ARTICLE_UPDATE} from '@/services/api'
+import { transformApi } from '@/services/api'
 import { request, METHOD } from '@/utils/request'
 import qs from 'qs'
+
+const API = transformApi({
+    LIST: "/list",
+    ADD: "/add",
+    REMOVE: "/remove",
+    EDIT: "/edit",
+    GET: "/get/{id}",
+    LIST_ALL: "/listAll"
+}, "/article");
 
 
 /**
@@ -14,9 +23,7 @@ import qs from 'qs'
 export async function articleList(keywords, title, searchText, sortOrder, pageSize, pageNumber) {
 
     // 参数列表，
-
-
-    return request(ARTICLE_LIST, METHOD.POST, qs.stringify({
+    return request(API.LIST, METHOD.POST, qs.stringify({
         keywords: keywords,
         title: title,
         searchText: searchText,
@@ -36,7 +43,7 @@ export async function articleList(keywords, title, searchText, sortOrder, pageSi
  * @returns 
  */
 export async function deleteArticles(ids) {
-    return request(ARTICLE_REMOVE, METHOD.POST, qs.stringify({ ids }, { arrayFormat: 'repeat' }), {
+    return request(API.REMOVE, METHOD.POST, qs.stringify({ ids }, { arrayFormat: 'repeat' }), {
         headers: {
             'content-type': 'application/x-www-form-urlencoded'
         }
@@ -49,8 +56,8 @@ export async function deleteArticles(ids) {
  * @param {number} id 
  * @returns 
  */
-export async function updateTopOrRecommendedById(type , id) {
-    return request(ARTICLE_UPDATE + '/' + type, METHOD.POST, qs.stringify({ type , id }, { arrayFormat: 'repeat' }), {
+export async function updateTopOrRecommendedById(type, id) {
+    return request(API.EDIT + '/' + type, METHOD.POST, qs.stringify({ type, id }, { arrayFormat: 'repeat' }), {
         headers: {
             'content-type': 'application/x-www-form-urlencoded'
         }

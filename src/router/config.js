@@ -27,12 +27,12 @@ const options = {
       redirect: '/login',
       children: [
         {
-          path: 'demo',
-          name: '演示页',
+          path: 'home',
+          name: '首页',
           meta: {
-            icon: 'file-ppt'
+            icon: 'home'
           },
-          component: () => import('@/pages/demo')
+          component: async () => (await import("@/pages/dblog/home")).Home,
         },{
           path: 'article',
           name: '文章管理',
