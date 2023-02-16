@@ -76,17 +76,13 @@
                 <a-col :span="12">
                     <a-card title="近期文章" :bordered="false">
                         <a slot="extra" href="#">更多</a>
-                        <p>Card content</p>
-                        <p>Card content</p>
-                        <p>Card content</p>
+                        <RecentArticles></RecentArticles>
                     </a-card>
                 </a-col>
                 <a-col :span="12">
                     <a-card title="近期评论" :bordered="false">
                         <a slot="extra" href="#">更多</a>
-                        <p>Card content</p>
-                        <p>Card content</p>
-                        <p>Card content</p>
+                        <RecentComments></RecentComments>
                     </a-card>
                 </a-col>
             </a-row>
@@ -100,6 +96,9 @@ import { ArticleTypeChart, SpiderChart } from "./chart";
 import { siteInfo , hotList} from "@/services/home";
 
 import infiniteScroll from 'vue-infinite-scroll';
+
+import {RecentArticles} from "@/pages/dblog/article";
+import {RecentComments} from "@/pages/dblog/comment";
 
 export default {
     directives: { infiniteScroll },
@@ -130,7 +129,7 @@ export default {
         });
 
     },
-    components: { ArticleTypeChart, SpiderChart },
+    components: { ArticleTypeChart, SpiderChart , RecentArticles , RecentComments },
     computed: {
         ...mapState('setting', ['pageMinHeight']),
         desc() {
