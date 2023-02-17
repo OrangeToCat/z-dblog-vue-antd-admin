@@ -9,9 +9,9 @@
         <a-icon type="user" />
         <span>个人中心</span>
       </a-menu-item>
-      <a-menu-item>
+      <a-menu-item @click="sysSetting">
         <a-icon type="setting" />
-        <span>设置</span>
+        <span>系统配置</span>
       </a-menu-item>
       <a-menu-divider />
       <a-menu-item @click="logout">
@@ -35,6 +35,9 @@ export default {
     logout() {
       logout()
       this.$router.push('/login')
+    },
+    sysSetting(){
+      this.$router.push('/setting')
     }
   }
 }

@@ -3,14 +3,19 @@
     <a-table :columns="columns" :row-key="record => record.id" bordered
          :data-source="data" :pagination="false" size="small"
         :loading="loading" >
-
+        <span slot="itemTitle" slot-scope="itemTitle,record"> 
+           <a :href="`${config.siteUrl}/article/${record.id || '0'}`" target="_blank">{{ itemTitle }}</a>
+        </span>
+        <span slot="type" slot-scope="type"> 
+            <a :href="`${config.siteUrl}/type/${type.id || '0'}`" target="_blank">{{ type.name }}</a>
+        </span>
     </a-table>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 
-import { articleList, updateTopOrRecommendedById } from "@/services/article";
+import { recentArticles } from "@/services/home";
 
 const columns = [
     {
@@ -18,23 +23,25 @@ const columns = [
         dataIndex: 'title',
         ellipsis: true,
         align: "left",
+        scopedSlots: { customRender: 'itemTitle' },
     },
     {
         title: "分类",
-        dataIndex: "coverImage",
+        dataIndex: "type",
         width: "80px",
         ellipsis: true,
         align: "center",
+        scopedSlots: { customRender: 'type' },
     },
     {
         title: "浏览数",
-        dataIndex: "1",
+        dataIndex: "lookCount",
         ellipsis: true,
         align: "center",
     },
     {
         title: "发布时间",
-        dataIndex: "2",
+        dataIndex: "createTime",
         ellipsis: true,
         align: "center",
     },
@@ -56,6 +63,7 @@ export default {
         ...mapState('setting', ['pageMinHeight']), count() {
             return this.expand ? 11 : 7;
         },
+        ...mapState('sysconfig', ['config']),
     }, mounted() {
         this.fetch();
     }
@@ -63,7 +71,6 @@ export default {
     //     console.log('updated');
     // }
     , methods: {
-     
         onSelectChange(selectedRowKeys) {
             this.selectedRowKeys = selectedRowKeys;
         },
@@ -81,9 +88,9 @@ export default {
         },
         fetch() {
             this.loading = true;
-            articleList().then(({ data }) => {
+            recentArticles(5).then(({ data }) => {
                 this.loading = false;
-                this.data = data.rows;
+                this.data = data.data;
             });
         },
         showAddModal() {
@@ -93,18 +100,6 @@ export default {
             console.log(e);
             // 添加一个新的模块
             this.visible = false;
-        },
-        onChange(type, id) {
-            var that = this;
-
-            // 这里有可以优化的地方
-            // 如果更改成功，则仅仅是提示，不做表格的刷新
-            // 如果更改失败，则提示，另外还要把开关复原
-            updateTopOrRecommendedById(type, id).then(({ data }) => {
-                var { status, message } = data;
-                that.$message[status == 200 ? "info" : "warn"](message);
-                that.fetch();
-            });
         }
     },
 }

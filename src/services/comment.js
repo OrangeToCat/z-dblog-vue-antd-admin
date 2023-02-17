@@ -12,9 +12,10 @@ const API = transformApi({
     REMOVE: "/remove",
     EDIT: "/edit",
     GET: "/get/{id}",
-    REPLY:"/reply",
-    AUDIT:"/audit",
-    LIST_VERIFYING:"/listVerifying"
+    REPLY: "/reply",
+    AUDIT: "/audit",
+    LIST_VERIFYING: "/listVerifying",
+    NEW_COMMENT_INFO: "/newCommentInfo",
 }, "/comment");
 
 
@@ -46,6 +47,15 @@ export async function list(condition) {
  */
 export async function remove(ids) {
     return request(API.REMOVE, METHOD.POST, qs.stringify({ ids }, { arrayFormat: 'repeat' }), {
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+        }
+    });
+}
+
+
+export async function newCommentInfo(pageSize = 10) {
+    return request(API.NEW_COMMENT_INFO, METHOD.POST, qs.stringify({ pageSize }, { arrayFormat: 'repeat' }), {
         headers: {
             'content-type': 'application/x-www-form-urlencoded'
         }

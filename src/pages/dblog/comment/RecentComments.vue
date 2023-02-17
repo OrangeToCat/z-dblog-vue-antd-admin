@@ -2,38 +2,46 @@
 
     <a-table :columns="columns" :row-key="record => record.id" bordered :data-source="data" :pagination="false"
         size="small" :loading="loading">
-
+        <span slot="content" slot-scope="content"> 
+            <p v-html="content"></p>    
+        </span>
+        <span slot="articleTitle" slot-scope="articleTitle,record"> 
+            <a :href="`${config.siteUrl}${record.sourceUrl}`" target="_blank">{{ articleTitle }}</a>
+        </span>
     </a-table>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 
-import { articleList } from "@/services/article";
+import { recentComments } from "@/services/home";
 
 const columns = [
     {
-        title: '标题',
-        dataIndex: 'title',
+        title: '发起人',
+        dataIndex: 'nickname',
         ellipsis: true,
         align: "left",
+        width: "40",
     },
     {
-        title: "分类",
-        dataIndex: "coverImage",
-        width: "80px",
+        title: "评论内容",
+        dataIndex: "content",
+        width: "80",
         ellipsis: true,
         align: "center",
+        scopedSlots: { customRender: 'content' },
     },
     {
-        title: "浏览数",
-        dataIndex: "1",
+        title: "出处",
+        dataIndex: "articleTitle",
         ellipsis: true,
-        align: "center",
+        align: "left",
+        scopedSlots: { customRender: 'articleTitle' },
     },
     {
-        title: "发布时间",
-        dataIndex: "2",
+        title: "评论时间",
+        dataIndex: "updateTime",
         ellipsis: true,
         align: "center",
     },
@@ -55,6 +63,7 @@ export default {
         ...mapState('setting', ['pageMinHeight']), count() {
             return this.expand ? 11 : 7;
         },
+        ...mapState('sysconfig', ['config']),
     }, mounted() {
         this.fetch();
     }
@@ -64,9 +73,9 @@ export default {
         },
         fetch() {
             this.loading = true;
-            articleList().then(({ data }) => {
+            recentComments(10).then(({ data }) => {
                 this.loading = false;
-                this.data = data.rows;
+                this.data = data.data;
             });
         },
         showAddModal() {

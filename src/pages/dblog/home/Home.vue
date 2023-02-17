@@ -54,10 +54,11 @@
                 </a-col>
                 <a-col :span="8">
                     <a-card title="文章访问TOP.10" :bordered="false" style="height: 350px;">
-                        <a-list size="small"  :data-source="data">
+                        <a-list size="small" :data-source="data">
                             <a-list-item slot="renderItem" slot-scope="item">
-                               <a  :href="`${config.siteUrl}/article/${item.id || '0'}`" target="_blank"> {{ item.title }}</a>
-
+                                <a :href="`${config.siteUrl}/article/${item.id || '0'}`" target="_blank"> {{
+                                    item.title
+                                }}</a>
                                 <div style="float: right;">{{ item.lookCount }}</div>
                             </a-list-item>
                         </a-list>
@@ -74,14 +75,14 @@
         <div>
             <a-row :gutter="[10]">
                 <a-col :span="12">
-                    <a-card title="近期文章" :bordered="false">
-                        <a slot="extra" href="#">更多</a>
+                    <a-card title="近期文章" :bordered="false" style="height: 350px;">
+                        <router-link slot="extra" :to="{ path: '/article/article_list' }">更多</router-link>
                         <RecentArticles></RecentArticles>
                     </a-card>
                 </a-col>
                 <a-col :span="12">
-                    <a-card title="近期评论" :bordered="false">
-                        <a slot="extra" href="#">更多</a>
+                    <a-card title="近期评论" :bordered="false" style="height: 350px;">
+                        <router-link slot="extra" :to="{ path: '/site/comment' }">更多</router-link>
                         <RecentComments></RecentComments>
                     </a-card>
                 </a-col>
@@ -93,12 +94,12 @@
 <script>
 import { mapState } from 'vuex'
 import { ArticleTypeChart, SpiderChart } from "./chart";
-import { siteInfo , hotList} from "@/services/home";
+import { siteInfo, hotList } from "@/services/home";
 
 import infiniteScroll from 'vue-infinite-scroll';
 
-import {RecentArticles} from "@/pages/dblog/article";
-import {RecentComments} from "@/pages/dblog/comment";
+import { RecentArticles } from "@/pages/dblog/article";
+import { RecentComments } from "@/pages/dblog/comment";
 
 export default {
     directives: { infiniteScroll },
@@ -123,13 +124,13 @@ export default {
             _this.installdate = _data.installdate;
         });
 
-        hotList(10).then(({ data }) => {
+        hotList(5).then(({ data }) => {
             var _data = data.data;
             _this.data = _data;
         });
 
     },
-    components: { ArticleTypeChart, SpiderChart , RecentArticles , RecentComments },
+    components: { ArticleTypeChart, SpiderChart, RecentArticles, RecentComments },
     computed: {
         ...mapState('setting', ['pageMinHeight']),
         desc() {
@@ -139,7 +140,7 @@ export default {
     }
     ,
     beforeMount() {
-       
+
     },
     methods: {
         

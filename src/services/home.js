@@ -9,11 +9,14 @@ const API = transformApi({
     SITE_INFO: "/siteInfo",
     LIST_SPIDER: "/listSpider",
     LIST_TYPE: "/listType",
+  
 }, "/statistics");
 
 
 const HOME_API = transformApi({
-    HOT_LIST: "/hotList"
+    HOT_LIST: "/hotList",
+    RECENT_COMMENTS:"/recentComments",
+    RECENT_ARTICLES:"/recentArticles"
 }, "/home");
 
 export async function siteInfo() {
@@ -35,5 +38,23 @@ export async function hotList(pageSize) {
         }
     });
 }
+
+export async function recentArticles(pageSize) {
+    return request(HOME_API.RECENT_ARTICLES, METHOD.POST, qs.stringify({pageSize}), {
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+        }
+    });
+}
+
+export async function recentComments(pageSize) {
+    return request(HOME_API.RECENT_COMMENTS, METHOD.POST, qs.stringify({pageSize}), {
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+        }
+    });
+}
+
+
 
 

@@ -33,38 +33,47 @@ const options = {
             icon: 'home'
           },
           component: async () => (await import("@/pages/dblog/home")).Home,
-        },{
+        },
+        {
+          path: '/setting',
+          name: '系统配置',
+          component: async () => (await import("@/pages/dblog/setting")).Setting,
+          meta: {
+            invisible:true,
+            icon: 'setting'
+          }
+        }, {
           path: 'article',
           name: '文章管理',
           meta: {
             icon: 'unordered-list'
           },
           component: BlankView,
-          children:[
+          children: [
             {
-              path: 'article-list',
+              path: 'article_list',
               name: '文章列表',
               component: async () => (await import("@/pages/dblog/article")).ArticleList,
             },
             {
-              path: 'type-list',
+              path: 'type_list',
               name: '分类列表',
               component: async () => (await import("@/pages/dblog/type")).TypeList,
             },
             {
-              path: 'tags-list',
+              path: 'tags_list',
               name: '标签列表',
-              component: async () =>(await import("@/pages/dblog/tags")).TagsList,
+              component: async () => (await import("@/pages/dblog/tags")).TagsList,
             }
           ]
-        },{
+        }, {
           path: 'site',
           name: '网站管理',
           meta: {
             icon: 'global'
           },
           component: BlankView,
-          children:[
+          children: [
             {
               path: 'link',
               name: '友情链接',
@@ -101,14 +110,14 @@ const options = {
               component: () => import('@/pages/demo'),
             }
           ]
-        },{
+        }, {
           path: 'auth',
           name: '权限管理',
           meta: {
             icon: 'lock'
           },
           component: PageView,
-          children:[
+          children: [
             {
               path: 'resource-list',
               name: '资源管理',
@@ -120,55 +129,55 @@ const options = {
               component: () => import('@/pages/demo'),
             }
           ]
-        },{
+        }, {
           path: 'user',
           name: '用户管理',
           meta: {
             icon: 'user'
           },
           component: PageView,
-          children:[
+          children: [
             {
               path: 'user-list',
               name: '用户列表',
               component: () => import('@/pages/demo'),
             }
           ]
-        },{
+        }, {
           path: 'lab',
           name: '实验室',
           meta: {
             icon: 'bank'
           },
           component: PageView,
-          children:[
+          children: [
             {
               path: 'msg-list',
               name: '推送消息',
               component: () => import('@/pages/demo'),
-            },{
+            }, {
               path: 'article-ship-list',
               name: '文章搬运工',
               component: () => import('@/pages/demo'),
             }
           ]
-        },{
+        }, {
           path: 'testpage',
           name: '测试页面',
           meta: {
             icon: 'bug'
           },
           component: PageView,
-          children:[
+          children: [
             {
               path: 'edit-config',
               name: '编辑器',
               component: () => import('@/pages/demo'),
-            },{
+            }, {
               path: 'icon-list',
               name: 'icon图标',
               component: () => import('@/pages/demo'),
-            },{
+            }, {
               path: 'shiro-list',
               name: 'shiro测试',
               component: () => import('@/pages/demo'),
@@ -176,7 +185,7 @@ const options = {
           ]
         },
       ]
-    }
+    },
   ]
 }
 
