@@ -1,4 +1,4 @@
-import Setting from "./tabPane";
+import Setting from "./Setting";
 
 export {
     Setting,

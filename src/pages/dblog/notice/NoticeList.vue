@@ -72,7 +72,7 @@ const columns = [
         title: "内容",
         dataIndex: "content",
         width: "80px",
-        align: "center",
+        align: "left",
         scopedSlots: { customRender: 'content' },
     }, {
         title: "状态",

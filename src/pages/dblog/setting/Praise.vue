@@ -59,7 +59,6 @@ export default {
         }
     },
     mounted() {
-        this.timeUnits();
     },
     methods: {
         onChange(e) {
